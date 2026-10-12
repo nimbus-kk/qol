@@ -1,22 +1,23 @@
 using System.Collections.Generic;
 using HarmonyLib;
 
-namespace nim_qol;
-
-[HarmonyPatch(typeof(ShowOnceUI), "OnEnable")]
-internal static class PopupRemoverPatch
+namespace nim_qol
 {
-    private static readonly List<string> Popups = [
-        "Canvas - 18Check",
-        "Canvas - AlphaPopup",
-    ];
-
-    private static void Postfix(ShowOnceUI __instance)
+    [HarmonyPatch(typeof(ShowOnceUI), "OnEnable")]
+    internal static class PopupRemover
     {
-        if (Popups.Contains(__instance.name))
+        private static readonly List<string> Popups = [
+            "Canvas - 18Check",
+            "Canvas - AlphaPopup",
+        ];
+
+        private static void Postfix(ShowOnceUI __instance)
         {
-            __instance.gameObject.SetActive(false);
-            Plugin.Logger.LogInfo($"PopupRemoverPatch - Prevented '{__instance.name}' from showing.");
+            if (Popups.Contains(__instance.name))
+            {
+                __instance.gameObject.SetActive(false);
+                Plugin.Logger.LogInfo($"PopupRemoverPatch - Prevented '{__instance.name}' from showing.");
+            }
         }
     }
 }
