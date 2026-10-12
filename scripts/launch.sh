@@ -6,6 +6,7 @@ if [[ -f "configuration.props" ]]; then
 
     if [[ -d "$install_dir" ]]; then
         dotnet build
+        cp "bin/Debug/net46/nim-qol.dll" "$install_dir/BepInEx/plugins"
 
         cd "$install_dir"
         ./run_bepinex.sh -force-glcore
