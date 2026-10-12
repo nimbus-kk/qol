@@ -1,0 +1,5 @@
+<Project>
+    <PropertyGroup>
+        <KoboldKareInstallDir>/path/to/KoboldKare</KoboldKareInstallDir>
+    </PropertyGroup>
+</Project>
