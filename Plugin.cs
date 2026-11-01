@@ -1,9 +1,8 @@
-﻿using System;
-using System.Text.RegularExpressions;
-using BepInEx;
+﻿using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
 using Photon.Pun;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace nim_qol
@@ -14,20 +13,23 @@ namespace nim_qol
     {
         internal static new ManualLogSource Logger;
         internal static PluginMenu Menu;
+        internal static GenesMenu Genes;
         internal static GameState GameState;
         private static Keybinds Keybinds;
-        private static bool _callbacksRegistered;
 
         private void Awake()
         {
             Logger = base.Logger;
-            Menu = new PluginMenu();
             GameState = new GameState();
             Keybinds = new Keybinds(Config);
+            Menu = new PluginMenu();
+            Genes = new GenesMenu();
 
             new Harmony(MyPluginInfo.PLUGIN_GUID).PatchAll();
 
-            SceneManager.sceneLoaded += OnSceneLoaded;
+            GameObject bootstrap = new("PluginPhotonBootstrap");
+            DontDestroyOnLoad(bootstrap);
+            bootstrap.AddComponent<PhotonBootstrap>();
         }
 
         private void Update()
@@ -38,17 +40,7 @@ namespace nim_qol
         private void OnGUI()
         {
             Menu.Draw();
-        }
-
-        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-        {
-            if (!_callbacksRegistered)
-            {
-                _callbacksRegistered = true;
-                Logger.LogWarning("PhotonNetwork.AddCallbackTarget");
-                PhotonNetwork.AddCallbackTarget(GameState);
-            }
-
+            Genes.Draw();
         }
     }
 }

@@ -1,12 +1,14 @@
 #!/bin/bash
 set -euo pipefail
 
+clear
+
 if [[ -f "configuration.props" ]]; then
     install_dir=$(sed -nE 's|^[[:space:]]*<KoboldKareInstallDir>(.*)</KoboldKareInstallDir>[[:space:]]*$|\1|p' configuration.props)
 
     if [[ -d "$install_dir" ]]; then
         dotnet build
-        cp "bin/Debug/net46/nim-qol.dll" "$install_dir/BepInEx/plugins"
+        cp "bin/Debug/net46/lol.nimbus.qol.dll" "$install_dir/BepInEx/plugins"
 
         cd "$install_dir"
         ./run_bepinex.sh -force-glcore

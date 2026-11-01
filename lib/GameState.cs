@@ -10,6 +10,7 @@ namespace nim_qol
         internal bool InGame { get; private set; }
         internal bool CheatsEnabled { get; private set; }
         internal bool IsHost { get; private set; }
+        internal Kobold Kobold { get; private set; }
 
         // !!! REALLY REALLY IMPORTANT !!!
         // DO NOT ALLOW UNHANDLED ERRORS IN HERE
@@ -38,6 +39,22 @@ namespace nim_qol
             InGame = true;
             IsHost = PhotonNetwork.IsMasterClient;
             CheatsEnabled = false;
+
+            PhotonNetwork.LocalPlayer.SetCustomProperties(
+                new Hashtable
+                {
+                    { MyPluginInfo.PLUGIN_GUID, true }
+                }
+            );
+
+            foreach (var player in PhotonNetwork.PlayerList)
+            {
+                Plugin.Logger.LogInfo($"Player.CustomProperties for existing player {player.NickName} ({player.UserId})");
+                foreach (var entry in player.CustomProperties)
+                {
+                    Plugin.Logger.LogInfo($" -> {entry.Key} {entry.Value}");
+                }
+            }
         }
 
         public void OnJoinRandomFailed(short returnCode, string message)
@@ -57,6 +74,11 @@ namespace nim_qol
 
         public void OnPlayerEnteredRoom(Player newPlayer)
         {
+            Plugin.Logger.LogInfo($"Player.CustomProperties for joining player {newPlayer.NickName} ({newPlayer.UserId})");
+            foreach (var entry in newPlayer.CustomProperties)
+            {
+                Plugin.Logger.LogInfo($" -> {entry.Key} {entry.Value}");
+            }
         }
 
         public void OnPlayerLeftRoom(Player otherPlayer)
@@ -69,6 +91,11 @@ namespace nim_qol
 
         public void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
         {
+            Plugin.Logger.LogInfo($"Player.CustomProperties changed for player {targetPlayer.NickName} ({targetPlayer.UserId})");
+            foreach (var entry in targetPlayer.CustomProperties)
+            {
+                Plugin.Logger.LogInfo($" -> {entry.Key} {entry.Value}");
+            }
         }
 
         public void OnMasterClientSwitched(Player newMasterClient)
@@ -94,6 +121,17 @@ namespace nim_qol
             {
                 CheatsEnabled = (bool)photonEvent.CustomData;
             }
+        }
+
+        internal void SetKobold(Kobold k)
+        {
+            Kobold = k;
+            Kobold.genesChanged += OnGenesChanged;
+        }
+
+        private void OnGenesChanged(KoboldGenes newGenes)
+        {
+            // Plugin.Logger.LogWarning("yay gene change");
         }
     }
 }
