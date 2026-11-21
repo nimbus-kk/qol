@@ -1,9 +1,7 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
-using Photon.Pun;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace nim_qol
 {

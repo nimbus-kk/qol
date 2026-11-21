@@ -7,7 +7,7 @@ namespace nim_qol
         private bool IsOpen = false;
         private Rect WindowRect = new(20, 20, 256, 0);
 
-        private readonly KoboldGenes NewGenes = new();
+        private static KoboldGenes NewGenes = new();
 
         internal void Open()
         {
@@ -114,8 +114,35 @@ namespace nim_qol
                     species = Plugin.GameState.Kobold.GetGenes().species
                 });
             }
-            y += 27;
+            y += 22;
 
+            if (GUI.Button(new Rect(5, y, WindowRect.width - 10, 22), "Load Current Genes"))
+            {
+                var CurrentGenes = Plugin.GameState.Kobold.GetGenes();
+
+                NewGenes = new KoboldGenes()
+                {
+                    maxEnergy = CurrentGenes.maxEnergy,
+                    baseSize = CurrentGenes.baseSize,
+                    fatSize = CurrentGenes.fatSize,
+                    ballSize = CurrentGenes.ballSize,
+                    dickSize = CurrentGenes.dickSize,
+                    breastSize = CurrentGenes.breastSize,
+                    bellySize = CurrentGenes.bellySize,
+                    metabolizeCapacitySize = CurrentGenes.metabolizeCapacitySize,
+                    hue = CurrentGenes.hue,
+                    clothingHue = CurrentGenes.clothingHue,
+                    brightness = CurrentGenes.brightness,
+                    saturation = CurrentGenes.saturation,
+                    dickEquip = CurrentGenes.dickEquip,
+                    grabCount = CurrentGenes.grabCount,
+                    dickThickness = CurrentGenes.dickThickness,
+                    species = CurrentGenes.species
+                };
+            }
+            y += 22;
+
+            y += 5;
             WindowRect.height = y;
 
             GUI.DragWindow();
