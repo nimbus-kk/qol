@@ -23,8 +23,6 @@ namespace nim_qol
 
             foreach (var instruction in instructions)
             {
-                Plugin.Logger.LogWarning(instruction.ToString());
-
                 if (instruction.opcode == OpCodes.Ldc_R4 && instruction.operand is float v && v == 10f)
                 {
                     instruction.opcode = OpCodes.Call;
